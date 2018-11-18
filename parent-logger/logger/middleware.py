@@ -35,8 +35,8 @@ def generate_image(insight):
 	# col_values = col_values.astype(np.uint8)
 
 	col_values = np.zeros(insight['height'])
-	for item in a['insights']:
-		col_values[item['scrollPos']:max((item['scrollPos'] + a['dimensionY']), insight['height'])] += item['endTime']
+	for item in insight['insights']:
+		col_values[item['scrollPos']:max((item['scrollPos'] + insight['dimensionY']), insight['height'])] += item['endTime']
 
 	max_intensity = np.amax(col_values)
 
@@ -51,8 +51,8 @@ def generate_image(insight):
 
 
 	# col_values = (col_values / max(len(unique-1), 1))
-	temp_col_values = 1 - col_values
-	temp_col_values = cv2.merge([temp_col_values * 255, temp_col_values * 255, temp_col_values * 255, np.ones(temp_col_values.shape) * 255])
+	temp_col_values = col_values.copy()
+	temp_col_values = cv2.merge([temp_col_values * 255, temp_col_values * 255, temp_col_values * 255, np.ones(temp_col_values.shape) * 125])
 	temp_col_values = np.repeat(temp_col_values, insight['dimensionX'], axis=1)
 	temp_col_values = temp_col_values.astype(np.uint8)
 
@@ -62,7 +62,7 @@ def generate_image(insight):
 
 
 def generate_image_for_insight(insight):
-	filename = "%s" % (uuid.uuid4())
+	filename = str(uuid.uuid4())
 	img_filename = filename + '.png'
 	html_filename = filename + '.html'
 	dir_path = os.path.join(settings.BASE_DIR, 'media')
@@ -105,10 +105,9 @@ class LoggerMiddleware:
 				print('intercepted: ', t)
 				ins = Insight(dimensionX=t.get('dimensionX', 360),
 				dimensionY=t.get('dimensionY', 1080), url=t.get('url', ''),
-				insights=json.dumps(t.get('insights', []), height=t.get('height', 100)))
+				insights=json.dumps(t.get('insights', [])), height=t.get('height', 100))
 				ins.save()
-				t = Thread(target=generate_image_for_insight, args=(ins,))
-				t.start()
+				generate_image_for_insight(ins)
 			except Exception as e:
 				print('Error at middleware: ', e)
 			response.set_cookie('logger_insight', '')
