@@ -1,0 +1,604 @@
+<html>
+ <head>
+  <title>
+   Metrics
+  </title>
+  <script type="text/javascript">
+   const mets = ;
+		const keys = ;
+		function sortedIndex(value) {
+			var low = 0,
+				high = keys.length;
+
+			while (low < high) {
+				var mid = low + high >>> 1;
+				if (keys[mid] < value) low = mid + 1;
+				else high = mid;
+			}
+			return low;
+		}
+		$('#mets').mousemove(function(event) {
+			const right = event.pageY - $(this).offset().top + $(this).scrollTop();
+			const ind = sortedIndex(right);
+			let t = '';
+			if (ind == 0) {
+				t = mets[keys[ind]] + ' seconds';
+			} else if (ind == keys.length) {
+				t = mets[keys[ind - 1]] + ' seconds';
+			} else {
+				t = mets[keys[ind+1]] + ' seconds';
+			}
+			$('#time').html(t);
+		})
+  </script>
+ </head>
+ <body>
+  <div id="mets" style="width: 950px; height: 1080px">
+   <html>
+    <head>
+     <title>
+      Metrics
+     </title>
+     <script type="text/javascript">
+      const mets = ;
+		const keys = ;
+		function sortedIndex(value) {
+			var low = 0,
+				high = keys.length;
+
+			while (low < high) {
+				var mid = low + high >>> 1;
+				if (keys[mid] < value) low = mid + 1;
+				else high = mid;
+			}
+			return low;
+		}
+		$('#mets').mousemove(function(event) {
+			const right = event.pageY - $(this).offset().top + $(this).scrollTop();
+			const ind = sortedIndex(right);
+			let t = '';
+			if (ind == 0) {
+				t = mets[keys[ind]] + ' seconds';
+			} else if (ind == keys.length) {
+				t = mets[keys[ind - 1]] + ' seconds';
+			} else {
+				t = mets[keys[ind+1]] + ' seconds';
+			}
+			$('#time').html(t);
+		})
+     </script>
+    </head>
+    <body>
+     <div id="mets" style="width: 934px; height: 1080px">
+      <html>
+       <head>
+        <title>
+         Metrics
+        </title>
+        <script type="text/javascript">
+         const mets = ;
+		const keys = ;
+		function sortedIndex(value) {
+			var low = 0,
+				high = keys.length;
+
+			while (low < high) {
+				var mid = low + high >>> 1;
+				if (keys[mid] < value) low = mid + 1;
+				else high = mid;
+			}
+			return low;
+		}
+		$('#mets').mousemove(function(event) {
+			const right = event.pageY - $(this).offset().top + $(this).scrollTop();
+			const ind = sortedIndex(right);
+			let t = '';
+			if (ind == 0) {
+				t = mets[keys[ind]] + ' seconds';
+			} else if (ind == keys.length) {
+				t = mets[keys[ind - 1]] + ' seconds';
+			} else {
+				t = mets[keys[ind+1]] + ' seconds';
+			}
+			$('#time').html(t);
+		})
+        </script>
+       </head>
+       <body>
+        <div id="mets" style="width: 950px; height: 1080px">
+         <!DOCTYPE html>
+         <html>
+          <head>
+           <meta charset="utf-8"/>
+           <meta content="width=device-width, initial-scale=1" name="viewport"/>
+           <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
+           <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+           </script>
+           <script src="https://claire.ai/js/insights.js">
+           </script>
+           <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+           </script>
+           <script type="text/javascript">
+            var LZString = {
+
+	writeBit : function(value, data) {
+	data.val = (data.val << 1) | value;
+	if (data.position == 15) {
+		data.position = 0;
+		data.string += String.fromCharCode(data.val);
+		data.val = 0;
+	} else {
+		data.position++;
+	}
+	},
+
+	writeBits : function(numBits, value, data) {
+	if (typeof(value)=="string")
+		value = value.charCodeAt(0);
+	for (var i=0 ; i<numBits ; i++) {
+		this.writeBit(value&1, data);
+		value = value >> 1;
+	}
+	},
+
+	produceW : function (context) {
+	if (Object.prototype.hasOwnProperty.call(context.dictionaryToCreate,context.w)) {
+		if (context.w.charCodeAt(0)<256) {
+		this.writeBits(context.numBits, 0, context.data);
+		this.writeBits(8, context.w, context.data);
+		} else {
+		this.writeBits(context.numBits, 1, context.data);
+		this.writeBits(16, context.w, context.data);
+		}
+		this.decrementEnlargeIn(context);
+		delete context.dictionaryToCreate[context.w];
+	} else {
+		this.writeBits(context.numBits, context.dictionary[context.w], context.data);
+	}
+	this.decrementEnlargeIn(context);
+	},
+
+	decrementEnlargeIn : function(context) {
+	context.enlargeIn--;
+	if (context.enlargeIn == 0) {
+		context.enlargeIn = Math.pow(2, context.numBits);
+		context.numBits++;
+	}
+	},
+
+	compress: function (uncompressed) {
+	var context = {
+		dictionary: {},
+		dictionaryToCreate: {},
+		c:"",
+		wc:"",
+		w:"",
+		enlargeIn: 2, // Compensate for the first entry which should not count
+		dictSize: 3,
+		numBits: 2,
+		result: "",
+		data: {string:"", val:0, position:0}
+	}, i;
+
+	for (i = 0; i < uncompressed.length; i += 1) {
+		context.c = uncompressed.charAt(i);
+		if (!Object.prototype.hasOwnProperty.call(context.dictionary,context.c)) {
+		context.dictionary[context.c] = context.dictSize++;
+		context.dictionaryToCreate[context.c] = true;
+		}
+
+		context.wc = context.w + context.c;
+		if (Object.prototype.hasOwnProperty.call(context.dictionary,context.wc)) {
+		context.w = context.wc;
+		} else {
+		this.produceW(context);
+		// Add wc to the dictionary.
+		context.dictionary[context.wc] = context.dictSize++;
+		context.w = String(context.c);
+		}
+	}
+
+	// Output the code for w.
+	if (context.w !== "") {
+		this.produceW(context);
+	}
+
+	// Mark the end of the stream
+	this.writeBits(context.numBits, 2, context.data);
+
+	// Flush the last char
+	while (context.data.val>0) this.writeBit(0,context.data)
+	return context.data.string;
+	},
+
+	readBit : function(data) {
+	var res = data.val & data.position;
+	data.position >>= 1;
+	if (data.position == 0) {
+		data.position = 32768;
+		data.val = data.string.charCodeAt(data.index++);
+	}
+	//data.val = (data.val << 1);
+	return res>0 ? 1 : 0;
+	},
+
+	readBits : function(numBits, data) {
+	var res = 0;
+	var maxpower = Math.pow(2,numBits);
+	var power=1;
+	while (power!=maxpower) {
+		res |= this.readBit(data) * power;
+		power <<= 1;
+	}
+	return res;
+	},
+
+	decompress: function (compressed) {
+	var dictionary = {},
+		next,
+		enlargeIn = 4,
+		dictSize = 4,
+		numBits = 3,
+		entry = "",
+		result = "",
+		i,
+		w,
+		c,
+		errorCount=0,
+		literal,
+		data = {string:compressed, val:compressed.charCodeAt(0), position:32768, index:1};
+
+	for (i = 0; i < 3; i += 1) {
+		dictionary[i] = i;
+	}
+
+	next = this.readBits(2, data);
+	switch (next) {
+		case 0:
+		c = String.fromCharCode(this.readBits(8, data));
+		break;
+		case 1:
+		c = String.fromCharCode(this.readBits(16, data));
+		break;
+		case 2:
+		return "";
+	}
+	dictionary[3] = c;
+	w = result = c;
+	while (true) {
+		c = this.readBits(numBits, data);
+
+		switch (c) {
+		case 0:
+			if (errorCount++ > 10000) return "Error";
+			c = String.fromCharCode(this.readBits(8, data));
+			dictionary[dictSize++] = c;
+			c = dictSize-1;
+			enlargeIn--;
+			break;
+		case 1:
+			c = String.fromCharCode(this.readBits(16, data));
+			dictionary[dictSize++] = c;
+			c = dictSize-1;
+			enlargeIn--;
+			break;
+		case 2:
+			return result;
+		}
+
+		if (enlargeIn == 0) {
+		enlargeIn = Math.pow(2, numBits);
+		numBits++;
+		}
+
+		if (dictionary[c]) {
+		entry = dictionary[c];
+		} else {
+		if (c === dictSize) {
+			entry = w + w.charAt(0);
+		} else {
+			return null;
+		}
+		}
+		result += entry;
+
+		// Add w+entry[0] to the dictionary.
+		dictionary[dictSize++] = w + entry.charAt(0);
+		enlargeIn--;
+
+		w = entry;
+
+		if (enlargeIn == 0) {
+		enlargeIn = Math.pow(2, numBits);
+		numBits++;
+		}
+
+	}
+	return result;
+	}
+};
+$(function() {
+	const id = '#blog_content'
+	let currentScrollPos = $(id).scrollTop();
+	var doc = document.documentElement;
+	let prevTimestamp = new Date().getTime();
+	const dimensionX = $(id).width(), dimensionY = $('#analytics').height();
+
+	const resp = {
+			insights: [],
+			height: document.getElementById('blog_content').clientHeight,
+			dimensionX: dimensionX,
+			dimensionY: dimensionY,
+			timestamp: new Date().getTime(),
+			url: window.location.href
+	}
+
+
+	$(id).scroll(function() {
+		clearTimeout($.data(this, 'scrollTimer'));
+		$.data(this, 'scrollTimer', setTimeout(function() {
+				const scrollPos = $(this).scrollTop();
+				if (scrollPos!=currentScrollPos) {
+						const t = new Date().getTime();
+						resp.insights.push({
+								scrollPos: currentScrollPos,
+								endTime: t - prevTimestamp
+						});
+						currentScrollPos = scrollPos;
+						prevTimestamp = t;
+				}
+		}, 1000));
+	});
+	function createCookie(name, value, days) {
+		var date, expires;
+		if (days) {
+			date = new Date();
+			date.setTime(date.getTime()+(days*24*60*60*1000));
+			expires = "; expires="+date.toGMTString();
+		} else {
+			expires = "";
+		}
+		document.cookie = name+"="+value+expires+"; path=/";
+		console.log('Cookie val: ', name+"="+value+expires+"; path=/");
+	}
+	var setCook = function() {
+		console.log('set cook called');
+		try {
+		const t = new Date().getTime();
+		const scrollPos = $(id).scrollTop();
+		resp.insights.push({
+				scrollPos: currentScrollPos,
+				endTime: t - prevTimestamp
+		});
+		currentScrollPos = scrollPos;
+		prevTimestamp = t;
+		createCookie('logger_insight', (JSON.stringify(resp)), 30);
+		} catch (e) {
+			console.log(e);
+
+			return 'Are you sure?';
+		}
+	};
+	$('#insight').click(setCook);
+	window.onbeforeunload = setCook;
+});
+           </script>
+           <!-- <script type='text/javascript'>
+		$(function() {
+			initializeInsights('blog_content');
+		});
+		</script> -->
+          </head>
+          <body>
+           <div id="blog_content" style=';background-image: url("http://localhost:8000/media/d6c121bc-4d59-4b9f-bbea-c1f88eb3d150.png");;background-image: url("http://localhost:8000/media/bc95aa36-6bc4-411f-84cf-2dd72298e6ba.png");;background-image: url("http://localhost:8000/media/1172fb55-c52a-43cf-9355-4c5a5b1fc70e.png");;background-image: url("http://localhost:8000/media/4bed5748-7815-445b-a55a-c2b80c10ace4.png");'>
+            <p>
+             Once upon a time, in a faraway village by a great river, there lived two brothers named Antek and Jonek.
+            </p>
+            <p>
+             Jonek was a kind hearted and patient man, always eager to help others, and it was with gratitude that he took over the running of his parents’ farm once they had become too old to care for the animals. Jonek was a successful farmer and soon married a beautiful woman who was as gentle and hardworking as he.
+            </p>
+            <p>
+             Antek helped his brother at the beginning, but he soon tired of farming and moved on from one job to another, first becoming a carpenter’s apprentice, then a baker’s assistant, and then a blacksmith’s assistant. Being a lazy man, Antek was unable to stay in any one job and would always move on when the work became too hard or tiresome. Finally he settled down and married the daughter of a very rich widow and lived a comfortable and luxurious life which required very little work.
+            </p>
+            <p>
+             Jonek, despite being a diligent and compassionate man, had no such luck. He toiled in the fields but his crops did not yield very much come harvest time. The wheat that did grow was soon beaten down by angry storms and merciless winds, and his cattle were plagued by disease and hunger.
+            </p>
+            <p>
+             His wife fell ill, and just as she began to recover, four of his children were struck down by yellow fever.
+            </p>
+            <p>
+             When he finally ran out of money, Jonek was forced to pay a visit to his heartless brother.
+            </p>
+            <p>
+             ‘Antek, lend me some money,’ pleaded Jonek. ‘My beloved children are ill, my horse is dying, and my ox is lame. I cannot work, and we are so hungry.’
+            </p>
+            <p>
+             ‘Alright, but you must pay me back what you owe and more,’ replied Antek with a smug grin on his face.
+            </p>
+            <p>
+             Jonek was saddened by his brother’s lack of goodwill, but he had no choice but to borrow the money despite such unreasonable demands.
+            </p>
+            <p>
+             Jonek borrowed and borrowed from his brother, and Antek let this happen, believing that one day he would be able to take over the family farm and reap the rewards.
+            </p>
+            <p>
+             It was not too long before the mean brother got his wish. Jonek fell behind in his payments and was unable to continue the upkeep of the farm. Eventually he was forced to search for a new home.
+            </p>
+            <p>
+             Antek was a very mean fellow and began to move all of his possessions into the farm before Jonek and his family had even had a chance to move out.
+            </p>
+            <p>
+             Despite his terrible run of bad luck, Jonek remained positive. He told his wife: ‘There is a small house at the very edge of the village where a shepherd once lived. We can just about manage to live in such a place.’
+            </p>
+            <p>
+             Although he was determined to remain optimistic, Jonek wept as he bid farewell to his childhood home. He left the farm with his wife and seven children. They carried their humble possessions on their backs and made their way towards their new home. Antek was so mean that he even refused to lend them his cart for the journey.
+            </p>
+            <p>
+             Jonek sold his remaining cattle for less than half what they were worth and tried his best to settle into the little house on the edge of the village.
+            </p>
+            <p>
+             His wife and children tended a small vegetable patch in the modest garden, while Jonek took on various odd jobs around the village. The family spent many years living an impoverished life, all the time wary of the wolves who roamed in the forest, all the time hungry for food or in need of extra money to buy clothes or medicines.
+            </p>
+            <p>
+             During those hard years, Antek, the mean hearted brother, became the wealthiest man in the county, but never once did he offer to help his poor brother.
+            </p>
+            <p>
+             One day, as Antek was hosting a lavish wedding for his eldest daughter, Jonek decided to visit the church to pray for help. In the church he saw his brother and his family – all sitting in the front row, all dressed in extravagant silks and furs and smooth leather boots, while poor Jonek remained at the back of the church: a cold and hungry figure hiding in the shadows.
+            </p>
+            <p>
+             Once the ceremony had come to an end, Jonek followed the wedding procession towards his old family home. He stayed in the background where he would not be seen, tears filling his eyes, overcome with grief at all that he had lost. When he reached the farmhouse, he stood hunched in the doorway and pleaded with his brother. ‘Brother,’ he whispered, ‘God be with you. I am famished. My wife and children are starving. Take a moment from your festivities to help us, please.’
+            </p>
+            <p>
+             <img alt="We don't help idle creatures" class="img-right" height="175" src="http://worldstories.org.uk/site/wp-content/themes/worldstories/images/story-images/Polish/we-dont-help-idle-creatures.jpg" width="320"/>
+             Upon seeing his poor brother, Antek growled: ‘I do not help idle creatures.’ And with that he grabbed a bone with barely a few scraps of meat on it and thrust the feeble offering into his brother’s hands.
+            </p>
+            <p>
+             Jonek was overcome with despair and anger at how his own brother could treat him so callously. He took the bone and ran from the farm into the cold, dark night.
+            </p>
+            <p>
+             It was not long before Jonek found himself on the bank of the river. A strange voice inside his head whispered: ‘Why must you suffer so? Jump in, jump in. The water is deep. You can finish this.’
+            </p>
+            <p>
+             But Jonek knew that he could not leave his family to fend for themselves. He slumped down onto the damp grass and began to gnaw on the scraps of meat still left on the bone his brother had given him.
+            </p>
+            <p>
+             Suddenly, Jonek felt a cold hand on his shoulder, then a quiet voice said: ‘Give some meat to me. Give some to me too.’
+            </p>
+            <p>
+             The poor farmer slowly turned around and took in the strange sight that stood before him: a tall creature, thin and bony with skin almost translucent in the moonlight. The creature was very pale with dark, sunken eyes. It had red lips that seemed to glow in the darkness, and it wore upon its shoulders a cloak made from spider weds. Atop its head there sat a wreath made from dried ferns. This was a truly ghostly apparition, but Jonek was not afraid.
+            </p>
+            <p>
+             ‘What do you want me to give you?’ asked the poor farmer. ‘You see for yourself that this bone is almost stripped bare of all meat.’
+            </p>
+            <p>
+             ‘You just give me the final scraps,’ whispered the creature. ‘Let me lick the juices clean from the bone. I am Poverty who has been following you for many years. We share everything you and I.’
+            </p>
+            <p>
+             Jonek jumped to his feet and cried out: ‘You pest! You nuisance! It is your fault that my family and I are suffering from hunger and cold.  It is you who has brought on this wretchedness and misery that plagues my life! I will get rid of you once and for all!’
+            </p>
+            <p>
+             But Poverty did not move, did not seem disturbed by the poor man’s outburst. She simply looked at him and asked: ‘What will you do to me when no man can hurt me nor kill me? I am an apparition and cannot be harmed.  Give me the bone and I will leave you and your family in peace for one whole day.’
+            </p>
+            <p>
+             Jonek was very hungry, but he could not resist the offer of one whole day of peace; one whole day without Poverty preying on his family.
+            </p>
+            <p>
+             He wiped the tears from his eyes and surrendered the bone to the strange creature.
+            </p>
+            <p>
+             Poverty snatched the bone from Jonek’s shaking hand and began eagerly gnawing every last scrap of meat. Seeing a small hole at the rounded end of the bone, she placed a skeletal hand inside, then another; then, like a ghostly snake, she slid inside the bone so that she could better suck at the juicy marrow hidden in the hollow.
+            </p>
+            <p>
+             Jonek suddenly had an idea. He found a short twig in the grass at his feet and jammed the twig into the hole, trapping Poverty inside the bone. Then he threw the bone out across the river and watched it splash into the water and sink beneath the murky surface.
+            </p>
+            <p>
+             As soon as the bone disappeared from sight, Jonek felt peace in his heart, as if a great weight had been lifted for the first time in many years.
+            </p>
+            <p>
+             Jonek turned away from the river and cast the apparition from his mind forever. He began to whistle a happy tune and, for the first time that he could remember, he began to feel optimistic about the future.
+            </p>
+            <p>
+             On his way home he passed by the village inn and was greeted by old friends and neighbours. They invited him inside to share a drink. They began to reminisce about old times, and many of the villagers gathered that night recalled Jonek’s hardworking nature and his kindness towards others. They began to ask him if he might help them around their farms or businesses as they all remembered that Jonek was very skilled and very diligent in his work.
+            </p>
+            <p>
+             The eldest of the group brought out a stack of gold coins, giving Jonek two hundred pieces of gold with which to buy a horse and provide for his family. Jonek gratefully accepted, vowing to repay the gold as soon as he was able, and immediately returned home to his wife.
+            </p>
+            <p>
+             By the time Jonek arrived at his little house on the edge of the village, the sun was rising across the fields. He found his wife and children in the garden waiting for him, all of them smiling and joyful.
+            </p>
+            <p>
+             ‘The people of the village came to visit us while you were away and they gave to us this cart full of flour and wheat and barley and beans!’ exclaimed his wife. ‘There is also meat and warm clothes for the children!’
+            </p>
+            <p>
+             Jonek was overcome with joy and dropped to his knees and said a prayer of gratitude. ‘Finally,’ he thought, ‘the curse of Poverty has been lifted from my family so that we might once more live in peace and happiness.’
+            </p>
+            <p>
+             From that day forwards, Jonek’s luck grew from strength to strength. He built a new house for his family and bought a small farm in a neighbouring field. He also bought two horses and some cows and even an ox.
+            </p>
+            <p>
+             He busied himself in the forest, cutting wood and selling the timber to villagers all across the county. Soon he became so busy that he was able to hire a young farmhand, and he watched with a happy heart as his family grew strong and healthy.
+            </p>
+            <p>
+             Everybody in the village was pleased for Jonek and his family; everybody except for Antek who grew jealous and resentful of his brother’s good fortune.
+            </p>
+            <p>
+             One day, Antek invited his brother back to their childhood farm for some hot mead. Jonek, forever willing to forgive his brother’s mean ways, accepted the invitation in the hope that they might once more become friends.
+            </p>
+            <p>
+             The brothers sat and drank in front of the fire while talking over old times. But it did not take very long before Antek’s mood darkened.  He could not stand to see his brother so happy and contented and he insisted on knowing how Jonek had turned his bad fortune into good. He accused his brother of many foul deeds. ‘Surely you stole money,’ he said. ‘Or perhaps you visited a neighbouring village and took food and cattle during the night?’
+            </p>
+            <p>
+             Jonek was hurt that Antek should think he had gained good fortune by dishonest means, so he decided to confide in his brother and told him all about how Poverty had haunted his family for many years and how, in the end, he had tricked Poverty by trapping her inside the bone and casting her into the river during the night.
+            </p>
+            <p>
+             This news was exactly what the treacherous brother had been waiting for.
+            </p>
+            <p>
+             After bidding Jonek farewell, he waited until nightfall and then ran down to the river as fast as his legs would carry him. Once there, he jumped into the river and dived down into the murky waters in search of the bone. Eventually his hands landed upon the bone which had settled among the tall weeds in the riverbed.
+            </p>
+            <p>
+             Antek swam to the surface and climbed out onto the riverbank and hastily pulled the twig from the hole in the end of the bone.
+            </p>
+            <p>
+             There was a
+             <em>
+              whooshing sound
+             </em>
+             and a very bright light which made Antek drop the bone in fright. Poverty appeared before him and swept him up into her arms, singing at the top of her voice: ‘Oh, my saviour, you have freed me! Now it is
+             <em>
+              you
+             </em>
+             who I will faithfully accompany until the day that you die!’
+            </p>
+            <p>
+             Antek grew uneasy. ‘Not me,’ he cried. ‘It is my brother whom you must haunt.’
+            </p>
+            <p>
+             ‘No, my friend,’ hissed Poverty, ‘you have set me free, so it is
+             <em>
+              you
+             </em>
+             who will now have Poverty until the end of your days.’
+            </p>
+            <p>
+             It was only then that Antek truly realised his terrible mistake.
+            </p>
+            <p>
+             The mean hearted brother ran from the river, but when he approached his home he found that a fire had taken hold of the roof and his cattle were running free across the fields. His wife ran towards him in distress. She told him how wolves had also attacked the sheep and how the horses were missing from the barn. ‘What are we to do?’ she cried. ‘How could such bad luck have befallen us in a single night?’
+            </p>
+            <p>
+             Antek fell to his knees, overcome with sadness and guilt at what he had done. And he was also afraid. He was afraid because he knew that his bad luck had only just begun.
+            </p>
+            <p>
+             As the weeks and months passed, Antek and his family suffered a great deal from hunger and misfortune. Jonek tried to help his brother, but no matter what he did, it seemed that disaster was fated to befell Antek and his family.
+            </p>
+            <p>
+             Soon Antek grew very ill and there was nothing that anybody could do to help. Every good deed ended in failure, every attempt to help ended in misery. Only Antek knew the reason why… ‘Poverty will not set me free until my death.’ thought the mean brother. ‘It seems I must pay for my misdeeds after all.’
+            </p>
+            <p>
+             Sometime later, on a quiet winter’s night, Antek passed away in his sleep. And it was only then that Poverty released the family of the curse so that they might start a new life in peace.
+            </p>
+            <p>
+             As for Jonek and his family, they lived a long and fruitful life. Jonek grew to be an old man and the loving couple became grandparents many times over. The farm remained prosperous and filled in every corner with the laughter of happy children.
+            </p>
+           </div>
+           <button id="insight">
+            Finish reading
+           </button>
+          </body>
+         </html>
+        </div>
+        <div id="time" style="float:right;">
+        </div>
+       </body>
+      </html>
+     </div>
+     <div id="time" style="float:right;">
+     </div>
+    </body>
+   </html>
+  </div>
+  <div id="time" style="float:right;">
+  </div>
+ </body>
+</html>
