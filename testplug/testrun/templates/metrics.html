@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<title>Metrics</title>
+		<script type='text/javascript'>
+		const mets = {{mets | safe}};
+		const keys = {{keys | safe}};
+		function sortedIndex(value) {
+			var low = 0,
+				high = keys.length;
+
+			while (low < high) {
+				var mid = low + high >>> 1;
+				if (keys[mid] < value) low = mid + 1;
+				else high = mid;
+			}
+			return low;
+		}
+		$('#mets').mousemove(function(event) {
+			const right = event.pageY - $(this).offset().top + $(this).scrollTop();
+			const ind = sortedIndex(right);
+			let t = '';
+			if (ind == 0) {
+				t = mets[keys[ind]] + ' seconds';
+			} else if (ind == keys.length) {
+				t = mets[keys[ind - 1]] + ' seconds';
+			} else {
+				t = mets[keys[ind+1]] + ' seconds';
+			}
+			$('#time').html(t);
+		})
+		</script>
+	</head>
+	<body>
+		<div style="width: {{dimensionX}}px; height: {{dimensionY}}px" id="mets">
+			{{html_content | safe}}
+		</div>
+		<div style='float:right;' id='time'></div>
+	</body>
+</html>
